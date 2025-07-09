@@ -1,0 +1,102 @@
+<% layout("/layouts/boilerplate.ejs") %>  
+<body>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 15px; padding-left: 10px; padding: 15px; background-color: #f0f0f0; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);color: #333; font-family: Arial, sans-serif;cursor: pointer;" class="col-7">
+        
+ 
+        <div class="card col-11" >
+            
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="..."  style="width: 100%; height: 350px; object-fit: cover; border-radius: 15px;">
+            <div class="card-body">
+                <h5 class="card-title"> <strong><%= listing.title %></strong></h5>
+                
+                <br>
+                <p><i>Owned by: <%= listing.owner.username %></i></p> 
+                <p><strong>Price:</strong>&#8377 <%= listing.price.toLocaleString("en-IN") %> per night</p>
+                <p class="card-text"><strong>Description:</strong> <%= listing.description %></p>
+                <p><strong>Location:</strong> <%= listing.location %></p>
+                <p><strong>Country:</strong> <%= listing.country %></p>
+            </div>
+            
+            <div class="card-body" style=" display: flex; justify-content: space-evenly; align-items: center;">
+
+                <button type="button" class="btn btn-info"><a href="/listings/<%=listing._id%>/edit " style="color: aliceblue; text-decoration: none;">Edit Listing</a></button>
+                &nbsp;&nbsp;
+
+                <button type="button" class="btn btn-success"><a href="/listings" style="color: aliceblue; text-decoration: none;">Back to Listings</a></button>&nbsp;
+
+                <form method="POST" action="/listings/<%=listing._id %>?_method=DELETE">
+                <button type="submit" class="btn btn-danger" style="color: aliceblue;">Delete Listing</button>
+                </form>            
+            </div>
+            
+        </div>
+        
+        <div class="col-8 offset-3 mb-3">
+            <hr />
+            <h4>Leave a Review</h4>
+            <form action="/listings/<%= listing.id %>/reviews" method="post" novalidate class="needs-validation">
+                <!-- <div class="mb-3 mt-3" >
+                    <label for="rating" class="form-label">Rating</label>
+                    <input type="range" min="1" max="5" id="rating" name="review[rating]"  class="form-range" >
+                </div> -->
+                <div class="mb-3 mt-3" >
+                    <label for="rating" class="form-label">Rating</label>
+                    <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                </div>
+
+                <div class="mb-3 mt-3">
+                    <label for="comment">Comments</label>
+                    <textarea
+                    name="review[comment]"
+                    id="comment"
+                    cols="30"
+                    rows="5" 
+                    class="form-control"
+                    required
+                    placeholder="Write your review here..."
+                    style="resize: none;"
+                    ></textarea>
+                    <div class="invalid-feedback">Please provide a comment.</div><br>
+                    <button class="btn btn-success"> Submit</button>
+                </div>
+            </form>
+        </div>
+        <hr>
+        <p><b>All Reviews</b></p>
+        <div class="col-8 offset-3 mb-3">
+            <% for(review of listing.reviews) { %>
+            <div class="card col-5 ms-3 mb-3 review-card" style="width: 14rem; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div class="card-body" >
+                <h5 class="card-title review-author"> By <%= review.author.username %></h5>
+                <p class="starability-result card-text" data-rating="<%= review.rating%>"></p>
+
+                <p class="card-text review-comment"><%=review.comment %></p>
+                <!-- <p class="card-text"> stars</p> -->
+                
+                <form
+                class="mb-3"
+                method="POST"
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                    <button class="btn btn-danger">Delete Review</button>
+                </form>
+            </div>
+        </div>
+        <% } %>
+
+            
+       
+        
+    </div>
+</body>
